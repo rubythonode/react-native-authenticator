@@ -12,7 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import { LoginButton } from 'react-native-fbsdk';
 
 export class Login extends Component {
-	
+
 	constructor() {
 	    super();
 	    this.state = {
@@ -25,7 +25,7 @@ export class Login extends Component {
 	processForm() {
 		axios('http://localhost:3000/auth/login', {
 			method: 'POST',
-			data: { 
+			data: {
 				email: this.state.email,
 	            password: this.state.password
 	        }
@@ -34,21 +34,21 @@ export class Login extends Component {
 		        // success
 				this.props.signIn();
 				this.props.adminPrevilege();
-		       
+
 		        AsyncStorage
 		          .setItem('token', response.data.token)
 		          .then(() => {
 		          	AsyncStorage
 		          	  .getItem('token')
 		          	  .then((token) => {
-		          	     console.log('token', token);	
+		          	     console.log('token', token);
 		          	  });
 		          });
 
 		       	AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
-		       	
+
 		      	Actions.home();
-		        
+
 		    }
 		}).catch((errors) => {
         	// change the component state
@@ -62,17 +62,17 @@ export class Login extends Component {
 					<View>
 						<Text>Email:</Text>
 						<TextInput onChangeText={(email) => this.setState({email})}
-        						   value={this.state.email} 
-								   style={{ 
-										height: 20, 
-										borderColor: 'gray', 
+        						   value={this.state.email}
+								   style={{
+										height: 20,
+										borderColor: 'gray',
 										borderWidth: 1 }}  />
 					</View>
 					<TextInput onChangeText={(password) => this.setState({password})}
         					   value={this.state.password}
-							   style={{ 
-									height: 20, 
-									borderColor: 'gray', 
+							   style={{
+									height: 20,
+									borderColor: 'gray',
 									borderWidth: 1 }} />
 
 					<Button title="Login"
@@ -92,7 +92,7 @@ export class Login extends Component {
 				          }
 				          onLogoutFinished={() => alert("User logged out")}/>
 					<Text>Dont have an account?</Text>
-				
+
 			</View>
 		);
 	};

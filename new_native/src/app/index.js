@@ -25,7 +25,7 @@ import Home from '../scenes/home/home';
 const createStoreWithMiddlware = applyMiddleware()(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-export default class client_native extends Component {
+export default class wishfill_native extends Component {
 
   async componentWillMount() {
     const token = await AsyncStorage.getItem('token');
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('client_native', () => client_native);
+AppRegistry.registerComponent('wishfill_native', () => wishfill_native);

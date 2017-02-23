@@ -1,4 +1,8 @@
 import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
+import axios from 'axios';
+import { AsyncStorage } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+
 
 export function signInAction() {
 	return {
@@ -18,3 +22,34 @@ export function signInErrorAction(errors) {
 		errors
 	};
 };
+
+export function processForm(email, password) {
+	return function(dispatch) {
+		axios('http://localhost:3000/auth/login', {
+			method: 'POST',
+			data: {
+				email,
+				password
+		  }
+		}).then((response) => {
+				if (response.status == 200) {
+						// success
+
+						AsyncStorage
+							.setItem('token', response.data.token)
+							.then(() => {
+								dispatch({type: AUTH_USER});
+								dispatch({type: SET_ADMIN_PRIVILEGES});
+							});
+
+						AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
+
+						Actions.home();
+
+				}
+		}).catch((errors) => {
+					// change the component state
+					dispatch({type: AUTH_ERROR});
+		});
+	}
+}

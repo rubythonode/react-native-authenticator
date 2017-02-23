@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-//import reduxThunk from 'redux-thunk';
+import reduxThunk from 'redux-thunk';
 import jwt_decode from 'jwt-decode';
 /*
 import { AUTH_USER } from './actions/types';
@@ -22,7 +22,7 @@ import reducers from './redux/rootReducer';
 import Login from '../scenes/login/login';
 import Home from '../scenes/home/home';
 
-const createStoreWithMiddlware = applyMiddleware()(createStore);
+const createStoreWithMiddlware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 export default class wishfill_native extends Component {

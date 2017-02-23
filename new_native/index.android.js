@@ -3,7 +3,7 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-
+/*
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -72,3 +72,9 @@ const styles = StyleSheet.create({
 });
 
 AppRegistry.registerComponent('new_native', () => new_native);
+*/
+
+import { AppRegistry } from 'react-native';
+import wishfill_native from './src/app/index';
+
+AppRegistry.registerComponent('new_native', () => wishfill_native);

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { signInAction, setAdminPrevilegeAction, signInErrorAction } from './login.action';
+import { processForm } from './login.action';
 
 import { View, Text, Button, TextInput, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -19,42 +19,12 @@ export class Login extends Component {
 	    	email: '',
 	    	password: ''
 	    };
-	    this.processForm = this.processForm.bind(this);
+			this.handleFormSubmit = this.handleFormSubmit.bind(this);
 	};
 
-	processForm() {
-		axios('http://localhost:3000/auth/login', {
-			method: 'POST',
-			data: {
-				email: this.state.email,
-	            password: this.state.password
-	        }
-		}).then((response) => {
-		    if (response.status == 200) {
-		        // success
-				this.props.signIn();
-				this.props.adminPrevilege();
-
-		        AsyncStorage
-		          .setItem('token', response.data.token)
-		          .then(() => {
-		          	AsyncStorage
-		          	  .getItem('token')
-		          	  .then((token) => {
-		          	     console.log('token', token);
-		          	  });
-		          });
-
-		       	AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
-
-		      	Actions.home();
-
-		    }
-		}).catch((errors) => {
-        	// change the component state
-        	this.props.setErrors(errors);
-		});
-	}
+	handleFormSubmit() {
+		this.props.processForm(this.state.email, this.state.password);
+	};
 
 	render() {
 		return (
@@ -76,7 +46,7 @@ export class Login extends Component {
 									borderWidth: 1 }} />
 
 					<Button title="Login"
-							onPress={this.processForm} />
+							onPress={this.handleFormSubmit} />
 					<LoginButton
 				          publishPermissions={["publish_actions"]}
 				          onLoginFinished={
@@ -101,10 +71,8 @@ export class Login extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    signIn: signInAction,
-    adminPrevilege: setAdminPrevilegeAction,
-    setErrors: signInErrorAction
-  }, dispatch);
+    processForm: processForm
+	}, dispatch);
 };
 
 function mapStateToProps(state) {

@@ -21,6 +21,7 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 import reducers from './redux/rootReducer';
 import Login from '../scenes/login/login';
 import Home from '../scenes/home/home';
+import Signup from '../scenes/signup/signup';
 
 const createStoreWithMiddlware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
@@ -47,6 +48,10 @@ export default class wishfill_native extends Component {
                  title="Home"
                  type="reset"
                  component={ Home } />
+          <Scene key="signup"
+                title="Signup"
+                type="reset"
+                component={ Signup }/>
         </Router>
 
       </Provider>

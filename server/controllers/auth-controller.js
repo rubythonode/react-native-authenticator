@@ -2,6 +2,7 @@ const validator = require('validator'),
       passport = require('passport');
 
 exports.signup = function(req, res, next) {
+  console.log('req body', req);  
   let validationResult = validateSignupForm(req.body);
 	if(!validationResult.success) {
 		return res.status(400).json({
@@ -12,7 +13,7 @@ exports.signup = function(req, res, next) {
 	}
 
   passport.authenticate('local-signup', function(err, info) {
-    if(err) { 
+    if(err) {
       if(err.name === 'MongoError' && err.code === 11000) {
         return res.status(409).json({
           success: false,
@@ -34,7 +35,7 @@ exports.signup = function(req, res, next) {
 
 exports.facebookLogin = (req, res, next) => {
 
-   passport.authenticate('facebook', { 
+   passport.authenticate('facebook', {
             failureRedirect: 'http://localhost:8082/login',
             session: false }
    )(req, res, next);

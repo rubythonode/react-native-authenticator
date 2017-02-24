@@ -27,6 +27,7 @@ export class Login extends Component {
 	};
 
 	render() {
+		const goToSignup = () => Actions.signup();
 		return (
 			<View style={{ flex: 1, marginTop: 70 }}>
 					<View>
@@ -61,7 +62,7 @@ export class Login extends Component {
 				            }
 				          }
 				          onLogoutFinished={() => alert("User logged out")}/>
-					<Text>Dont have an account?</Text>
+					<Text onPress={Actions.signup}>Dont have an account?</Text>
 
 			</View>
 		);

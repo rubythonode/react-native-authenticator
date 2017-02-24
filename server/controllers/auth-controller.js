@@ -12,7 +12,7 @@ exports.signup = function(req, res, next) {
 		});
 	}
 
-  passport.authenticate('local-signup', function(err, info) {
+  passport.authenticate('local-signup', function(err, token, userData) {
     if(err) {
       if(err.name === 'MongoError' && err.code === 11000) {
         return res.status(409).json({
@@ -28,7 +28,13 @@ exports.signup = function(req, res, next) {
         message: 'Could not process the form'
       });
     }
-    exports.login(req,res, next);
+    return res.json({
+      success: true,
+      message: 'You have successfully logged in',
+      token,
+      userData
+    })
+
 
   })(req, res, next);
 };
@@ -101,7 +107,7 @@ function validateSignupForm(payload) {
     errors.password = "Password must have at least 8 characters.";
   }
 
-  if (!payload.name || payload.name.trim().length === 0) {
+  if (!payload.name || payload.name.length === 0) {
     isFormValid = false;
     errors.name = "Please provide your name.";
   }
@@ -133,7 +139,7 @@ function validateLoginForm(payload) {
     errors.email = "Please provide your email address.";
   }
 
-  if (!payload.password || payload.password.trim().length === 0) {
+  if (!payload.password || payload.password.length === 0) {
     isFormValid = false;
     errors.password = "Please provide your password.";
   }

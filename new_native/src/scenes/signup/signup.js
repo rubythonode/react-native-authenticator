@@ -9,7 +9,7 @@ import { View, Text, Button, TextInput, AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 // Import action creator
-import { processForm } from './signup.action';
+import { processSignupForm } from './signup.action';
 
 class Signup extends Component{
 
@@ -26,11 +26,11 @@ class Signup extends Component{
       email: '',
       password: ''
     };
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleSignupFormSubmit = this.handleSignupFormSubmit.bind(this);
   }
 
-  handleFormSubmit(){
-    this.props.processForm(this.state.name, this.state.email, this.state.password);
+  handleSignupFormSubmit(){
+    this.props.processSignupForm(this.state.name, this.state.email, this.state.password);
   }
   render(){
     return(
@@ -63,7 +63,7 @@ class Signup extends Component{
                     borderWidth: 1 }}  />
           </View>
           <Button title="Sign up"
-							onPress={this.handleFormSubmit} />
+							onPress={this.handleSignupFormSubmit} />
           <Text onPress={Actions.login}>
             Go to login
           </Text>
@@ -75,7 +75,7 @@ class Signup extends Component{
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    processForm: processForm
+    processSignupForm: processSignupForm
 	}, dispatch);
 };
 

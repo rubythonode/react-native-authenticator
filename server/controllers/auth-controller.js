@@ -2,8 +2,8 @@ const validator = require('validator'),
       passport = require('passport');
 
 exports.signup = function(req, res, next) {
-  console.log('req body', req);  
   let validationResult = validateSignupForm(req.body);
+  console.log(validationResult);
 	if(!validationResult.success) {
 		return res.status(400).json({
 			success: false,
@@ -90,8 +90,8 @@ function validateSignupForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-
-  if (!payload.email || !validator.isEmail(payload.email)) {
+  console.log('payload', validator.isEmail(payload.email));
+  if (!payload.email) {
     isFormValid = false;
     errors.email = "Please provide a correct email address.";
   }
@@ -127,8 +127,8 @@ function validateLoginForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-
-  if (!payload.email || payload.email.trim().length === 0) {
+  console.log('payloaddd...',payload);
+  if (!payload.email) {
     isFormValid = false;
     errors.email = "Please provide your email address.";
   }

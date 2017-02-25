@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { processForm } from './login.action';
 
-import { View, Text, Button, TextInput, AsyncStorage } from 'react-native';
+import { View, Text, Button, TextInput, AsyncStorage, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 import { LoginButton } from 'react-native-fbsdk';
@@ -28,22 +28,16 @@ export class Login extends Component {
 
 	render() {
 		return (
-			<View style={{ flex: 1, marginTop: 70 }}>
+			<View style={styles.container}>
 					<View>
 						<Text>Email:</Text>
 						<TextInput onChangeText={(email) => this.setState({email})}
         						   value={this.state.email}
-								   style={{
-										height: 20,
-										borderColor: 'gray',
-										borderWidth: 1 }}  />
+								   style={styles.inputStyle}   />
 					</View>
 					<TextInput onChangeText={(password) => this.setState({password})}
         					   value={this.state.password}
-							   style={{
-									height: 20,
-									borderColor: 'gray',
-									borderWidth: 1 }} />
+							   style={styles.inputStyle} />
 
 					<Button title="Login"
 							onPress={this.handleFormSubmit} />
@@ -83,3 +77,15 @@ function mapStateToProps(state) {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+const styles = StyleSheet.create({
+	container:{
+		flex: 1,
+		marginTop: 70
+	},
+	inputStyle:{
+		height: 20,
+		borderColor: 'gray',
+		borderWidth: 1
+	}
+})

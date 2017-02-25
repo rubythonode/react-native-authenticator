@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
   StyleSheet,
   Text,
@@ -10,6 +11,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 /*
 import { AUTH_USER } from './actions/types';
 import { SET_ADMIN_PRIVILEGES } from './actions/types';
@@ -25,6 +27,17 @@ import Signup from '../scenes/signup/signup';
 
 const createStoreWithMiddlware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+axios.interceptors.request.use((config) => {
+  console.log('config', config);
+});
+axios.interceptors.response.use((response) => {
+  console.log(response)
+
+}, (error) => {
+  console.log('error interceptors', error)
+
+});
 
 export default class wishfill_native extends Component {
 

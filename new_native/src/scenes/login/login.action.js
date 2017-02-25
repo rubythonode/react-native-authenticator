@@ -38,8 +38,8 @@ export function processForm(email, password) {
 						AsyncStorage
 							.setItem('token', response.data.token)
 							.then(() => {
-								dispatch({type: AUTH_USER});
-								dispatch({type: SET_ADMIN_PRIVILEGES});
+								dispatch(signInAction());
+								dispatch(setAdminPrevilegeAction());
 							});
 
 						AsyncStorage.setItem('user', JSON.stringify(response.data.userData));

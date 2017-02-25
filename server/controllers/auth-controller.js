@@ -2,7 +2,9 @@ const validator = require('validator'),
       passport = require('passport');
 
 exports.signup = function(req, res, next) {
+  console.log('body', req.body)
   let validationResult = validateSignupForm(req.body);
+  console.log('validationResult', validationResult);
 	if(!validationResult.success) {
 		return res.status(400).json({
 			success: false,

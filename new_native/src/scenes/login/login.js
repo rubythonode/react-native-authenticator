@@ -27,7 +27,6 @@ export class Login extends Component {
 	};
 
 	render() {
-		const goToSignup = () => Actions.signup();
 		return (
 			<View style={{ flex: 1, marginTop: 70 }}>
 					<View>

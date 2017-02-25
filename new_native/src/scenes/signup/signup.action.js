@@ -5,7 +5,6 @@ import { Actions } from 'react-native-router-flux';
 const api = 'http://localhost:3000/auth/signup';
 
 export function processSignupForm(name, email, password){
-  console.log(name, email, password);
   return function(dispatch){
     axios.post(api,{
       name,

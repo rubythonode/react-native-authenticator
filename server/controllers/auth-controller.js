@@ -3,7 +3,6 @@ const validator = require('validator'),
 
 exports.signup = function(req, res, next) {
   let validationResult = validateSignupForm(req.body);
-  console.log(validationResult);
 	if(!validationResult.success) {
 		return res.status(400).json({
 			success: false,
@@ -96,8 +95,7 @@ function validateSignupForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-  console.log('payload', validator.isEmail(payload.email));
-  if (!payload.email) {
+  if (!payload.email || payload.password.trim().length === 0) {
     isFormValid = false;
     errors.email = "Please provide a correct email address.";
   }
@@ -133,7 +131,6 @@ function validateLoginForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-  console.log('payloaddd...',payload);
   if (!payload.email) {
     isFormValid = false;
     errors.email = "Please provide your email address.";

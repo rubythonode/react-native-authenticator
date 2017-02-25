@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 
-import { View, Text, Button, TextInput, AsyncStorage } from 'react-native';
+import { View, Text, Button, TextInput, AsyncStorage, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 // Import action creator
@@ -34,33 +34,24 @@ class Signup extends Component{
   }
   render(){
     return(
-      <View style={{ flex: 1, marginTop: 70 }}>
+      <View style={styles.container}>
         <View>
             <Text>Name:</Text>
             <TextInput onChangeText={(name) => this.setState({name})}
             value={this.state.name}
-            style={{
-              height: 20,
-              borderColor: 'gray',
-              borderWidth: 1 }}  />
+            style={styles.inputStyle}  />
               </View>
           <View>
           <View>
             <Text>Email:</Text>
             <TextInput onChangeText={(email) => this.setState({email})}
                        value={this.state.email}
-                   style={{
-                    height: 20,
-                    borderColor: 'gray',
-                    borderWidth: 1 }}  />
+                     style={styles.inputStyle}  />
           </View>
             <Text>Password:</Text>
             <TextInput secureTextEntry={true} onChangeText={(password) => this.setState({password})}
                        value={this.state.password}
-                   style={{
-                    height: 20,
-                    borderColor: 'gray',
-                    borderWidth: 1 }}  />
+                     style={styles.inputStyle}   />
           </View>
           <Button title="Sign up"
 							onPress={this.handleSignupFormSubmit} />
@@ -87,3 +78,15 @@ function mapStateToProps(state) {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+
+const  styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    marginTop: 70
+  },
+  inputStyle:{
+    height: 20,
+    borderColor: 'gray',
+    borderWidth: 1
+  }
+})

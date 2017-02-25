@@ -20,7 +20,6 @@ module.exports = function(config) {
 		let newUser = new User(userData);
 		newUser.save(function(err, user) {
 			if(err) { return done(err); }
-			console.log('user',user);
 			let payload = {
 				sub: user._id,
 				timestamp: new Date().getTime(),

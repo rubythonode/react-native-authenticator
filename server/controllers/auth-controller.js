@@ -2,9 +2,7 @@ const validator = require('validator'),
       passport = require('passport');
 
 exports.signup = function(req, res, next) {
-  console.log('body', req.body)
   let validationResult = validateSignupForm(req.body);
-  console.log('validationResult', validationResult);
 	if(!validationResult.success) {
 		return res.status(400).json({
 			success: false,
@@ -49,7 +47,6 @@ exports.facebookLogin = (req, res, next) => {
 };
 
 exports.facebookRedirect = (req, res, next) => {
-  console.log('user', req.user);
   res.redirect('http://localhost:8082?token='+req.user);
 };
 
@@ -65,8 +62,9 @@ exports.login = function(req, res, next) {
 
   passport.authenticate('local-login', function(err, token, userData) {
     if(err) {
-      console.dir(err)
+      console.log(err);
       if(err.name === 'IncorrectCredentialsError') {
+        console.log('err0r...');
         return res.status(400).json({
           success: false,
           message: 'Check the form for errors',

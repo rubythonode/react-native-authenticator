@@ -25,29 +25,30 @@ export function signInErrorAction(errors) {
 
 export function processForm(email, password) {
 	return function(dispatch) {
-		axios('http://localhost:3000/auth/login', {
+		fetch('http://localhost:3000/auth/login', {
 			method: 'POST',
-			data: {
-				email,
-				password
-		  }
-		}).then((response) => {
-				if (response.status == 200) {
-						// success
+			headers: {
+		    'Accept': 'application/json',
+		    'Content-Type': 'application/json',
+		  },
+			body:JSON.stringify({
+		    email: email,
+		    password: password,
+		  })
+		}).then((response) => response.json()).then((responseData) =>{
+				AsyncStorage
+					.setItem('token', responseData.token)
+					.then(() => {
+						dispatch(signInAction());
+						dispatch(setAdminPrevilegeAction());
+					});
 
-						AsyncStorage
-							.setItem('token', response.data.token)
-							.then(() => {
-								dispatch(signInAction());
-								dispatch(setAdminPrevilegeAction());
-							});
+				AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
 
-						AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
-
-						Actions.home();
-
-				}
-		}).catch((errors) => {
+				Actions.home();
+		})
+		.catch((error) => {
+					console.log('errors', error);
 					// change the component state
 					dispatch({type: AUTH_ERROR});
 		});

@@ -6,29 +6,33 @@ const api = 'http://localhost:3000/auth/signup';
 
 export function processSignupForm(name, email, password){
   return function(dispatch){
-    axios.post(api,{
-      name,
-      email,
-      password
+    fetch(api, {
+			method: 'POST',
+			headers: {
+		    'Accept': 'application/json',
+		    'Content-Type': 'application/json',
+		  },
+			body:JSON.stringify({
+        name: name,
+		    email: email,
+		    password: password
+		  })
+		})
+    .then((response) => response.json())
+		.then((responseData) =>{
+      AsyncStorage
+        .setItem('token', responseData.token)
+        .then(() => {
+          dispatch({type: AUTH_USER});
+          dispatch({type: SET_ADMIN_PRIVILEGES});
+        });
+
+      AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
+      Actions.home();
+      
     })
-    .then(function(response){
-      if (response.status == 200) {
+    .catch((error) =>{
 
-          AsyncStorage
-            .setItem('token', response.data.token)
-            .then(() => {
-              dispatch({type: AUTH_USER});
-              dispatch({type: SET_ADMIN_PRIVILEGES});
-            });
-
-          AsyncStorage.setItem('user', JSON.stringify(response.data.userData));
-
-          Actions.home();
-
-      }
-    })
-    .catch(function(errors){
-      console.log(errors);
     })
   }
 }

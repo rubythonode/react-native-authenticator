@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   AppRegistry,
   StyleSheet,
   Text,
@@ -10,6 +11,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 import jwt_decode from 'jwt-decode';
+import interceptor from  './common/http-interceptor';
 /*
 import { AUTH_USER } from './actions/types';
 import { SET_ADMIN_PRIVILEGES } from './actions/types';

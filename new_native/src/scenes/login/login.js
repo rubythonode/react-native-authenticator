@@ -35,7 +35,7 @@ export class Login extends Component {
         						   value={this.state.email}
 								   style={styles.inputStyle}   />
 					</View>
-					<TextInput onChangeText={(password) => this.setState({password})}
+					<TextInput secureTextEntry={true} onChangeText={(password) => this.setState({password})}
         					   value={this.state.password}
 							   style={styles.inputStyle} />
 

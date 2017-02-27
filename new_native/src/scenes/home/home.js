@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { signOutAction } from './home.actions';
 
-import { View, Button, AsyncStorage } from 'react-native';
+import { View, Button, AsyncStorage, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 class SignOut extends React.Component {
@@ -25,6 +25,7 @@ class SignOut extends React.Component {
     	<View style={{ marginTop: 50 }}>
     		<Button title="Sign Out"
 				    onPress={this.handleSignOut} />
+        <Text onPress={Actions.login}>Go to login</Text>
 		  </View>
 	)
   };

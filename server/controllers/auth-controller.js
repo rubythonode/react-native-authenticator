@@ -47,7 +47,6 @@ exports.facebookLogin = (req, res, next) => {
 };
 
 exports.facebookRedirect = (req, res, next) => {
-  console.log('user', req.user);
   res.redirect('http://localhost:8082?token='+req.user);
 };
 
@@ -63,7 +62,6 @@ exports.login = function(req, res, next) {
 
   passport.authenticate('local-login', function(err, token, userData) {
     if(err) {
-      console.dir(err)
       if(err.name === 'IncorrectCredentialsError') {
         return res.status(400).json({
           success: false,

@@ -10,10 +10,7 @@ module.exports = function(config) {
       callbackURL: config.facebook.callback_url
     },
     function(accessToken, refreshToken, profile, done) {
-      console.log('token', accessToken);
-      console.log('profile', profile);
       done(null, accessToken, profile);
     }
   );
 };
-

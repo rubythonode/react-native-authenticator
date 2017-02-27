@@ -35,7 +35,9 @@ export function processForm(email, password) {
 		    email: email,
 		    password: password,
 		  })
-		}).then((response) => response.json()).then((responseData) =>{
+		})
+		.then((response) => response.json())
+		.then((responseData) =>{
 				AsyncStorage
 					.setItem('token', responseData.token)
 					.then(() => {

@@ -62,9 +62,7 @@ exports.login = function(req, res, next) {
 
   passport.authenticate('local-login', function(err, token, userData) {
     if(err) {
-      console.log(err);
       if(err.name === 'IncorrectCredentialsError') {
-        console.log('err0r...');
         return res.status(400).json({
           success: false,
           message: 'Check the form for errors',

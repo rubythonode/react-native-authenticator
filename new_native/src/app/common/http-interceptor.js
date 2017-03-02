@@ -20,8 +20,8 @@ export const interceptor = fetchIntercept.register({
   response: function(response){
     // Can modify the response from here
     if (response.status === 400){
-      alert(INCORRECT_USER_CREDENTIAL);
-      return;
+      //alert(INCORRECT_USER_CREDENTIAL);
+      return Promise.reject(response.json());
     }
     if (response.status === 401){
       alert(UNAUTH_USER);

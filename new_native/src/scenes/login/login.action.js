@@ -37,22 +37,22 @@ export function processForm(email, password) {
 		  })
 		})
 		.then((response) => response.json())
-		.then((responseData) =>{
-				AsyncStorage
-					.setItem('token', responseData.token)
-					.then(() => {
-						dispatch(signInAction());
-						dispatch(setAdminPrevilegeAction());
-					});
+		.then((responseData) => {
+				  	AsyncStorage
+							.setItem('token', responseData.token)
+							.then(() => {
+								dispatch(signInAction());
+								dispatch(setAdminPrevilegeAction());
+							});
 
-				AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
+						AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
 
-				Actions.home();
+						Actions.home();
 		})
 		.catch((error) => {
 					console.log('errors', error);
 					// change the component state
 					dispatch({type: AUTH_ERROR});
-		});
+		}).done();
 	}
 }

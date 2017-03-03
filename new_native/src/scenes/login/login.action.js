@@ -2,6 +2,7 @@ import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { alert } from '../../app/common/alert';
 
 
 export function signInAction() {
@@ -50,7 +51,10 @@ export function processForm(email, password) {
 						Actions.home();
 		})
 		.catch((error) => {
-					console.log('errors', error);
+					error.then(function(res){
+						var errorMessage = res.errors.email ? res.errors.email : res.errors.password;
+						alert(errorMessage);
+					})
 					// change the component state
 					dispatch({type: AUTH_ERROR});
 		}).done();

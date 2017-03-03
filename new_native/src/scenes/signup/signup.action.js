@@ -3,6 +3,8 @@ import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 const api = 'http://localhost:3000/auth/signup';
+import { alert } from '../../app/common/alert';
+
 
 export function processSignupForm(name, email, password){
   return function(dispatch){
@@ -29,10 +31,22 @@ export function processSignupForm(name, email, password){
 
       AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
       Actions.home();
-      
+
     })
     .catch((error) =>{
-
+      error.then(function(res){
+        var errorMessage;
+        if (res.errors.password){
+          errorMessage = res.errors.password;
+        }
+        if (res.errors.name){
+          errorMessage = res.errors.name;
+        }
+        if (res.errors.email){
+          errorMessage = res.error.email;
+        }
+        alert(errorMessage);
+      })
     })
   }
 }

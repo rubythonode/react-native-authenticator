@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "fetch-error": "^1.0.0",
     "fetch-intercept": "^2.2.3",
     "jwt-decode": "^2.1.0",
     "react": "~15.4.0",

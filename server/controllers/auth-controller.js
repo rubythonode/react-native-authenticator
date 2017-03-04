@@ -2,6 +2,7 @@ const validator = require('validator'),
       passport = require('passport');
 
 exports.signup = function(req, res, next) {
+  console.log(req.body);
   let validationResult = validateSignupForm(req.body);
 	if(!validationResult.success) {
 		return res.status(400).json({
@@ -51,6 +52,7 @@ exports.facebookRedirect = (req, res, next) => {
 };
 
 exports.login = function(req, res, next) {
+  console.log(req.body);
   let validationResult = validateLoginForm(req.body);
 	if(!validationResult.success) {
 		return res.status(400).json({

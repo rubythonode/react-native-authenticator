@@ -11,12 +11,22 @@ import { Actions } from 'react-native-router-flux';
 import { processSignupForm } from './signup.action';
 
 import t from 'tcomb-form-native';
+import { emailValidator, passwordValidator } from '../../app/common/validations';
+
+var Email = t.refinement(t.String, emailValidator);
+Email.getValidationErrorMessage = function (value, path, context) {
+  return 'Invalid email address';
+};
+var Password = t.refinement(t.String, passwordValidator);
+Password.getValidationErrorMessage = function(value, path, context){
+  return 'Please enter atleast 8 characters'
+}
 
 var Form = t.form.Form;
 const formModel = t.struct({
   name: t.String,
-  email: t.String,
-  password: t.String
+  email: Email,
+  password: Password
 });
 var options = {
   fields: {
@@ -27,7 +37,8 @@ var options = {
       error: 'Enter your aame'
     },
     password:{
-      error: 'Enter your password'
+      password: true,
+      secureTextEntry: true
     }
   }
 };
@@ -93,9 +104,11 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
 const  styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    marginTop: 70
+  container: {
+    justifyContent: 'center',
+    marginTop: 50,
+    padding: 20,
+    backgroundColor: '#ffffff',
   },
   inputStyle:{
     height: 20,

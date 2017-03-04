@@ -20,7 +20,7 @@ module.exports = function(config) {
 			if(err) { return done(err); }
 
 			if(!user) {
-				let error = new Error('Incorrect email');
+				let error = new Error('User doesn\'t exist');
 				error.name = 'IncorrectCredentialsError';
 				return done(error);
 			}

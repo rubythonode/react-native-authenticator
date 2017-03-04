@@ -12,19 +12,30 @@ import { Actions } from 'react-native-router-flux';
 
 import { LoginButton } from 'react-native-fbsdk';
 
+import { emailValidator } from '../../app/common/validations';
+
 
 var Form = t.form.Form;
+
+var Email = t.refinement(t.String, emailValidator);
+Email.getValidationErrorMessage = function (value, path, context) {
+  return 'Invalid email address';
+};
 const formModel = t.struct({
-  email: t.String,
+  email: Email,
   password: t.String
 });
+
 var options = {
   fields: {
-    email: {
-      error: 'Insert a valid email'
+    password: {
+      error: 'Enter your password',
+      password: true,
+      secureTextEntry: true
     }
   }
 };
+
 export class Login extends Component {
 
 	constructor() {

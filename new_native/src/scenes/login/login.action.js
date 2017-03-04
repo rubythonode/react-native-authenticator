@@ -25,8 +25,6 @@ export function signInErrorAction(errors) {
 };
 
 export function processForm({email, password}) {
-	console.log('email',email);
-	console.log('password',password);
 	return function(dispatch) {
 		fetch('http://localhost:3000/auth/login', {
 			method: 'POST',
@@ -54,6 +52,7 @@ export function processForm({email, password}) {
 		})
 		.catch((error) => {
 					error.then(function(res){
+						console.log(res);
 						var errorMessage = res.errors.email ? res.errors.email : res.errors.password;
 						alert(errorMessage);
 					})

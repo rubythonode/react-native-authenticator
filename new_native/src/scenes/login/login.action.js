@@ -24,7 +24,9 @@ export function signInErrorAction(errors) {
 	};
 };
 
-export function processForm(email, password) {
+export function processForm({email, password}) {
+	console.log('email',email);
+	console.log('password',password);
 	return function(dispatch) {
 		fetch('http://localhost:3000/auth/login', {
 			method: 'POST',

@@ -52,7 +52,6 @@ export function processForm({email, password}) {
 		})
 		.catch((error) => {
 					error.then(function(res){
-						console.log(res);
 						var errorMessage = res.errors.email ? res.errors.email : res.errors.password;
 						alert(errorMessage);
 					})

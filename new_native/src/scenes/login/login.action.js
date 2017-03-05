@@ -51,8 +51,8 @@ export function processForm({email, password}) {
 						Actions.home();
 		})
 		.catch((error) => {
-					error.then(function(res){
-						var errorMessage = res.errors.email ? res.errors.email : res.errors.password;
+					error.then((res) =>{
+						const errorMessage = res.errors.email ? res.errors.email : res.errors.password;
 						alert(errorMessage);
 					})
 					// change the component state

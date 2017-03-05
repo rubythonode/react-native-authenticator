@@ -15,9 +15,9 @@ import { LoginButton } from 'react-native-fbsdk';
 import { emailValidator } from '../../app/common/validations';
 
 
-var Form = t.form.Form;
+const Form = t.form.Form;
 
-var Email = t.refinement(t.String, emailValidator);
+let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
   return 'Invalid email address';
 };
@@ -26,10 +26,10 @@ const formModel = t.struct({
   password: t.String
 });
 
-var options = {
+let options = {
   fields: {
     password: {
-      error: 'Enter your password',
+      error: 'Password is required',
       password: true,
       secureTextEntry: true
     }

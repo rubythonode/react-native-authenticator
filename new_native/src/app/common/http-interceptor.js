@@ -19,17 +19,16 @@ export const interceptor = fetchIntercept.register({
 
   response: function(response){
     // Can modify the response from here
-    if (response.status === 400){
-      return Promise.reject(response.json());
+    if (response.status >= 200 && response.status < 300) {
+      return response;
     }
-    if (response.status === 401){
+    else if (response.status === 401){
       alert(UNAUTH_USER);
       Actions.login();
       return;
-    }
-    if (response.status === 409){
-      alert(DUPLICATE_USER)
-      return;
+    }else{
+      console.log('hi');
+      return Promise.reject(response.json());
     }
     return response;
   },

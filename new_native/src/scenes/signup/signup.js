@@ -13,28 +13,28 @@ import { processSignupForm } from './signup.action';
 import t from 'tcomb-form-native';
 import { emailValidator, passwordValidator } from '../../app/common/validations';
 
-var Email = t.refinement(t.String, emailValidator);
+let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
-  return 'Invalid email address';
+  return 'Your email must be valid';
 };
-var Password = t.refinement(t.String, passwordValidator);
+let Password = t.refinement(t.String, passwordValidator);
 Password.getValidationErrorMessage = function(value, path, context){
   return 'Please enter atleast 8 characters'
 }
 
-var Form = t.form.Form;
+const Form = t.form.Form;
 const formModel = t.struct({
   name: t.String,
   email: Email,
   password: Password
 });
-var options = {
+let options = {
   fields: {
     email: {
-      error: 'Insert a valid email'
+      error: 'Your email must be valid'
     },
     name:{
-      error: 'Enter your aame'
+      error: 'Your name is required'
     },
     password:{
       password: true,

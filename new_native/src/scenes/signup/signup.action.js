@@ -34,7 +34,7 @@ export function processSignupForm(name, email, password){
 
     })
     .catch((error) =>{
-      error.then(function(res){
+      error.then((res) => {
         var errorMessage;
         if (res.errors.password){
           errorMessage = res.errors.password;

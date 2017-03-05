@@ -21,13 +21,11 @@ export const interceptor = fetchIntercept.register({
     // Can modify the response from here
     if (response.status >= 200 && response.status < 300) {
       return response;
-    }
-    else if (response.status === 401){
+    } else if (response.status === 401) {
       alert(UNAUTH_USER);
       Actions.login();
       return;
-    }else{
-      console.log('hi');
+    } else {
       return Promise.reject(response.json());
     }
     return response;

@@ -15,11 +15,11 @@ import { emailValidator, passwordValidator } from '../../app/common/validations'
 
 let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
-  return 'Your email must be valid';
+  return 'Your email must be valid.';
 };
 let Password = t.refinement(t.String, passwordValidator);
 Password.getValidationErrorMessage = function(value, path, context){
-  return 'Please enter atleast 8 characters'
+  return 'Your password must be at least 8 characters.';
 }
 
 const Form = t.form.Form;
@@ -31,10 +31,10 @@ const formModel = t.struct({
 let options = {
   fields: {
     email: {
-      error: 'Your email must be valid'
+      error: 'Your email must be valid.'
     },
     name:{
-      error: 'Your name is required'
+      error: 'Your name is required.'
     },
     password:{
       password: true,

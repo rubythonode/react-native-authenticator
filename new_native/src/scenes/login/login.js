@@ -44,9 +44,8 @@ export class Login extends Component {
 	};
 
 	handleFormSubmit() {
-    var value = this.refs.form.getValue();
+    let value = this.refs.form.getValue();
     if (value) { // if validation fails, value will be null
-
       this.props.processForm(value);
     }
 	};

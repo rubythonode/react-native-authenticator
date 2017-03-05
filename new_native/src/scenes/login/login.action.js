@@ -32,7 +32,7 @@ export function processForm({email, password}) {
 		    'Accept': 'application/json',
 		    'Content-Type': 'application/json',
 		  },
-			body:JSON.stringify({
+			body: JSON.stringify({
 		    email: email,
 		    password: password,
 		  })
@@ -54,9 +54,8 @@ export function processForm({email, password}) {
 					error.then((res) =>{
 						const errorMessage = res.errors.email ? res.errors.email : res.errors.password;
 						alert(errorMessage);
+						dispatch(signInErrorAction(errorMessage));
 					})
-					// change the component state
-					dispatch({type: AUTH_ERROR});
 		}).done();
-	}
-}
+	};
+};

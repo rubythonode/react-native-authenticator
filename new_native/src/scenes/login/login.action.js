@@ -2,6 +2,7 @@ import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { alert } from '../../app/common/alert';
 
 
 export function signInAction() {
@@ -23,7 +24,7 @@ export function signInErrorAction(errors) {
 	};
 };
 
-export function processForm(email, password) {
+export function processForm({email, password}) {
 	return function(dispatch) {
 		fetch('http://localhost:3000/auth/login', {
 			method: 'POST',
@@ -31,28 +32,30 @@ export function processForm(email, password) {
 		    'Accept': 'application/json',
 		    'Content-Type': 'application/json',
 		  },
-			body:JSON.stringify({
+			body: JSON.stringify({
 		    email: email,
 		    password: password,
 		  })
 		})
 		.then((response) => response.json())
-		.then((responseData) =>{
-				AsyncStorage
-					.setItem('token', responseData.token)
-					.then(() => {
-						dispatch(signInAction());
-						dispatch(setAdminPrevilegeAction());
-					});
+		.then((responseData) => {
+				  	AsyncStorage
+							.setItem('token', responseData.token)
+							.then(() => {
+								dispatch(signInAction());
+								dispatch(setAdminPrevilegeAction());
+							});
 
-				AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
+						AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
 
-				Actions.home();
+						Actions.home();
 		})
 		.catch((error) => {
-					console.log('errors', error);
-					// change the component state
-					dispatch({type: AUTH_ERROR});
-		});
-	}
-}
+					error.then((res) =>{
+						const errorMessage = res.errors.email ? res.errors.email : res.errors.password;
+						alert(errorMessage);
+						dispatch(signInErrorAction(errorMessage));
+					})
+		}).done();
+	};
+};

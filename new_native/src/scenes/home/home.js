@@ -22,7 +22,7 @@ class SignOut extends React.Component {
 
   render() {
     return (
-    	<View style={{ marginTop: 50 }}>
+    	<View style={{ marginTop: 70 }}>
     		<Button title="Sign Out"
 				    onPress={this.handleSignOut} />
         <Text onPress={Actions.login}>Go to login</Text>

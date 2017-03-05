@@ -64,7 +64,7 @@ class Signup extends Component{
   handleSignupFormSubmit(){
     var value = this.refs.signup.getValue();
     if (value){
-      this.props.processSignupForm(value.name, value.email, value.password);
+      this.props.processSignupForm({ name: value.name, email: value.email, password: value.password});
     }
   }
   render(){

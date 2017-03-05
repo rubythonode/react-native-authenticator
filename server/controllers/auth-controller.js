@@ -93,14 +93,16 @@ function validateSignupForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-  if (!payload.email || payload.password.trim().length === 0) {
+  if (!payload.email || payload.email.trim().length === 0) {
     isFormValid = false;
     errors.email = "Please provide a correct email address.";
   }
 
-  if (!payload.password || !validator.isLength(payload.password, 8)) {
-    isFormValid = false;
-    errors.password = "Password must have at least 8 characters.";
+  if(!payload.social) {
+    if (!payload.password || !validator.isLength(payload.password, 8)) {
+      isFormValid = false;
+      errors.password = "Password must have at least 8 characters.";
+    }
   }
 
   if (!payload.name || payload.name.length === 0) {

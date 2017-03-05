@@ -5,7 +5,12 @@ let UserSchema = new mongoose.Schema({
 	email: { type: String, index: { unique: true }},
 	password: String,
 	name: String,
-	role: String
+	role: String,
+	social: {
+		facebook: {
+			token: String
+		}
+	}
 });
 
 UserSchema.methods.comparePassword = function(password, callback) {

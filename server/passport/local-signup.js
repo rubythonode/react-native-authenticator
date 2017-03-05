@@ -13,6 +13,7 @@ module.exports = function(config) {
 		let userData = {
 			email: email,
 			password: password,
+			social: req.body.social ? req.body.social : { facebook: { token: null } },
 			name: req.body.name,
 			role: req.body.role || 'user'
 		};

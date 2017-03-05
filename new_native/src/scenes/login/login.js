@@ -10,10 +10,11 @@ import { View, Text, Button, TextInput, AsyncStorage, StyleSheet, ScrollView, To
 import t from 'tcomb-form-native';
 import { Actions } from 'react-native-router-flux';
 
-import { LoginButton } from 'react-native-fbsdk';
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
 import { emailValidator } from '../../app/common/validations';
 
+import { processSignupForm } from '../signup/signup.action';
 
 const Form = t.form.Form;
 
@@ -73,6 +74,28 @@ export class Login extends Component {
                         alert("Login was cancelled");
                       } else {
                         alert("Login was successful with permissions: " + result.grantedPermissions)
+												AccessToken.getCurrentAccessToken()
+																	 .then((data) => {
+																		 const { accessToken } = data;
+																		 fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+																		  .then((response) => response.json())
+																		  .then((json) => {
+                                        let user = {
+                                          name: json.name,
+                                          email: json.email,
+                                          password: 'password',
+                                          social: {
+                                            facebook: {
+                                              token: accessToken
+                                            }
+                                          }
+                                        }
+                                        this.props.processSignupForm(user);
+																		  })
+																		  .catch((error) => {
+																		    console.log(error)
+																		  })
+																	 });
                       }
                     }
                   }
@@ -88,7 +111,8 @@ export class Login extends Component {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    processForm: processForm
+    processForm: processForm,
+    processSignupForm: processSignupForm
 	}, dispatch);
 };
 

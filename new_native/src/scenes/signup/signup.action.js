@@ -6,7 +6,7 @@ const api = 'http://localhost:3000/auth/signup';
 import { alert } from '../../app/common/alert';
 
 
-export function processSignupForm(name, email, password){
+export function processSignupForm(obj){
   return function(dispatch){
     fetch(api, {
 			method: 'POST',
@@ -14,11 +14,7 @@ export function processSignupForm(name, email, password){
 		    'Accept': 'application/json',
 		    'Content-Type': 'application/json',
 		  },
-			body:JSON.stringify({
-        name: name,
-		    email: email,
-		    password: password
-		  })
+			body: JSON.stringify(obj)
 		})
     .then((response) => response.json())
 		.then((responseData) =>{
@@ -33,7 +29,7 @@ export function processSignupForm(name, email, password){
       Actions.home();
 
     })
-    .catch((error) =>{
+    .catch((error) => {
       error.then((res) => {
         var errorMessage;
         if (res.errors.password){

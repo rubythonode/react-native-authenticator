@@ -4,6 +4,7 @@ import { alert } from './alert';
 import { signInErrorAction, setAdminPrevilegeAction,  signInAction} from '../../scenes/login/login.action';
 import { LoginManager, GraphRequest, GraphRequestManager, AccessToken} from 'react-native-fbsdk';
 
+
 export function asyncStorage(responseData, dispatch){
   AsyncStorage
 		.setItem('token', responseData.token)

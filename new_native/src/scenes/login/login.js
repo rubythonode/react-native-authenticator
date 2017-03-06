@@ -8,10 +8,14 @@ import { View, Text, Button, TextInput, AsyncStorage, StyleSheet, ScrollView, To
 import t from 'tcomb-form-native';
 import { Actions } from 'react-native-router-flux';
 
+
 // Custom modules
 import { emailValidator } from '../../app/common/validations';
 import { processSignupForm } from '../signup/signup.action';
-import { processForm, facebookLogin } from './login.action';
+import { processForm, facebookLogin, httpProgress } from './login.action';
+import { ProgressIndicator } from '../common-scenes/progress';
+
+// Stylesheet
 import { Styles } from '../../app/common/styles';
 
 
@@ -45,6 +49,7 @@ export class Login extends Component {
 	handleFormSubmit() {
     let value = this.refs.form.getValue();
     if (value) { // if validation fails, value will be null
+      this.props.httpProgress();
       this.props.processForm(value);
     }
 	};
@@ -62,10 +67,14 @@ export class Login extends Component {
           <TouchableHighlight style={Styles.button} onPress={this.handleFormSubmit} underlayColor='#99d9f4'>
             <Text style={Styles.buttonText}>Login</Text>
           </TouchableHighlight>
-            <Button title="Login with facebook" onPress={this.props.facebookLogin} />
-          <Text onPress={Actions.signup}>Dont have an account?</Text>
-
+            <Button color="#3B5998" title="Login with facebook" onPress={this.props.facebookLogin} />
+          <Text onPress={Actions.signup} style={{textAlign: 'center'}}>Dont have an account?</Text>
 				</View>
+        <View style={Styles.progress} >
+        {
+          this.props.progress ? (<ProgressIndicator style={{justifyContent: 'center',alignItems: 'center'}} />):(<Text></Text>)
+        }
+        </View>
         </ScrollView>
 		);
 	};
@@ -76,13 +85,15 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     processForm: processForm,
     processSignupForm: processSignupForm,
-    facebookLogin: facebookLogin
+    facebookLogin: facebookLogin,
+    httpProgress: httpProgress
 	}, dispatch);
 };
 
 function mapStateToProps(state) {
 	return {
-		errors: state.login.errors
+		errors: state.login.errors,
+    progress: state.login.progress
 	};
 };
 

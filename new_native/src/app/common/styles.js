@@ -26,5 +26,10 @@ export const Styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     alignSelf: 'center'
+  },
+  progress:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

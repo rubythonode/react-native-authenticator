@@ -1,4 +1,4 @@
-import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
+import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR, HTTP_PROGRESS} from './login.types';
 import axios from 'axios';
 import { AUTH } from '../../app/common/enums';
 import { asyncStorage, authErrorBuilder, loginWithFacebook} from '../../app/common/helper';
@@ -10,6 +10,12 @@ export function signInAction(payload) {
 		payload
 	};
 };
+
+export function httpProgress(){
+	return {
+		type: HTTP_PROGRESS
+	}
+}
 
 export function setAdminPrevilegeAction() {
 	return {
@@ -77,6 +83,7 @@ export function processForm({email, password}) {
 
 export  function facebookLogin(){
 	return function(dispatch){
+		dispatch({type: HTTP_PROGRESS})
 		loginWithFacebook()
 			.then((result) =>{
 				let user = {

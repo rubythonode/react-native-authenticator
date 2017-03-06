@@ -1,12 +1,11 @@
 const validator = require('validator'),
       passport = require('passport'),
-      User = require('../models/user'),
-       token = require('../helpers/token-generator');
+      User = require('../models/user');
 import { USER_ROLE } from '../helpers/enums';
+import { authResponseGenerator } from '../helpers/response-generator';
 
 
 exports.signup = function(req, res, next) {
-  console.log(req.body);
   let validationResult = validateSignupForm(req.body);
 	if(!validationResult.success) {
 		return res.status(400).json({
@@ -81,14 +80,14 @@ exports.facebook = function(req, res){
   User.findOne({email: req.body.email})
     .exec(function(err, response){
       if (response){
-        return res.json(token.generateToken(req.body))
+        return res.json(authResponseGenerator(req.body))
       }
       else{
         req.body.role = req.body.role || USER_ROLE.DEFAULT_USER_ROLE;
         var newUser = new User(req.body);
         newUser.save(function(err, user){
           if (!err){
-            return res.json(token.generateToken(user))
+            return res.json(authResponseGenerator(user))
           }
         })
       }

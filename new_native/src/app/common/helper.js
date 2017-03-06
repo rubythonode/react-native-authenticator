@@ -4,10 +4,11 @@ import { alert } from './alert';
 import { signInErrorAction, setAdminPrevilegeAction,  signInAction} from '../../scenes/login/login.action';
 
 export function asyncStorage(responseData, dispatch){
+  console.log(responseData);
   AsyncStorage
 		.setItem('token', responseData.token)
 		.then(() => {
-			dispatch(signInAction());
+			dispatch(signInAction(responseData.userData));
 			dispatch(setAdminPrevilegeAction());
 		});
 

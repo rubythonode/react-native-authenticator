@@ -4,9 +4,10 @@ import { AUTH } from '../../app/common/enums';
 import { asyncStorage, authErrorBuilder } from '../../app/common/helper';
 
 
-export function signInAction() {
+export function signInAction(payload) {
 	return {
-		type: AUTH_USER
+		type: AUTH_USER,
+		payload
 	};
 };
 

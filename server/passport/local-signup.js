@@ -1,7 +1,7 @@
 const User = require('mongoose').model('User');
 const passportLocalStrategy = require('passport-local').Strategy;
 import { USER_ROLE } from '../helpers/enums';
-const token = require('../helpers/token-generator');
+import { authResponseGenerator } from '../helpers/response-generator';
 
 module.exports = function(config) {
 
@@ -22,7 +22,7 @@ module.exports = function(config) {
 		let newUser = new User(userData);
 		newUser.save(function(err, user) {
 			if(err) { return done(err); }
-			const payload = token.generateToken(user);
+			const payload = authResponseGenerator(user);
 			return done(null, payload);
 		});
 	});

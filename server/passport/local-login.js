@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt'),
 	  User = require('mongoose').model('User'),
-	  passportLocalStrategy = require('passport-local').Strategy,
-		token = require('../helpers/token-generator');
+	  passportLocalStrategy = require('passport-local').Strategy;
+import { authResponseGenerator } from '../helpers/response-generator';
 
 module.exports = function(config) {
 
@@ -18,7 +18,6 @@ module.exports = function(config) {
 
 		User.findOne({email: userData.email}, function(err, user) {
 			if(err) { return done(err); }
-			console.log(user);
 			if(!user) {
 				let error = new Error('User doesn\'t exist');
 				error.name = 'IncorrectCredentialsError';
@@ -26,7 +25,6 @@ module.exports = function(config) {
 			}
 
 			user.comparePassword(userData.password, function(err, isMatch) {
-				console.log(isMatch);
 				if(err) { return done(err); }
 
 				if(!isMatch) {
@@ -35,7 +33,7 @@ module.exports = function(config) {
 					return done(error);
 				}
 
-				var payload = token.generateToken(user);
+				var payload = authResponseGenerator(user);
 
 				return done(null, payload);
 			});

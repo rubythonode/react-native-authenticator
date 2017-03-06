@@ -1,7 +1,7 @@
 import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
 import axios from 'axios';
 import { AUTH } from '../../app/common/enums';
-import { asyncStorage, authErrorBuilder } from '../../app/common/helper';
+import { asyncStorage, authErrorBuilder, loginWithFacebook} from '../../app/common/helper';
 
 
 export function signInAction(payload) {
@@ -58,19 +58,49 @@ export function processForm({email, password}) {
 	};
 };
 
-export function processFacebookLogin(profileInfo){
+// export function processFacebookLogin(profileInfo){
+// 	return function(dispatch){
+// 		fetch(AUTH.FACEBOOK, {
+// 			method: 'POST',
+// 			headers: {
+// 		    'Accept': 'application/json',
+// 		    'Content-Type': 'application/json',
+// 		  },
+// 			body: JSON.stringify(profileInfo)
+// 		})
+// 		.then((response) => response.json())
+// 		.then((responseData) =>{
+// 			asyncStorage(responseData, dispatch);
+// 		})
+// 	}
+// }
+
+export  function facebookLogin(){
 	return function(dispatch){
-		fetch(AUTH.FACEBOOK, {
-			method: 'POST',
-			headers: {
-		    'Accept': 'application/json',
-		    'Content-Type': 'application/json',
-		  },
-			body: JSON.stringify(profileInfo)
-		})
-		.then((response) => response.json())
-		.then((responseData) =>{
-			asyncStorage(responseData, dispatch);
-		})
+		loginWithFacebook()
+			.then((result) =>{
+				let user = {
+          name: result.user.name,
+          email: result.user.email,
+          social: {
+            facebook: {
+              id: result.user.id,
+              token: result.accessToken
+            }
+          }
+        }
+				fetch(AUTH.FACEBOOK, {
+					method: 'POST',
+					headers: {
+				    'Accept': 'application/json',
+				    'Content-Type': 'application/json',
+				  },
+					body: JSON.stringify(user)
+				})
+				.then((response) => response.json())
+				.then((responseData) =>{
+					asyncStorage(responseData, dispatch);
+				})
+			})
 	}
 }

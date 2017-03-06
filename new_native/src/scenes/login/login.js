@@ -7,12 +7,11 @@ import { connect } from 'react-redux';
 import { View, Text, Button, TextInput, AsyncStorage, StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
 import t from 'tcomb-form-native';
 import { Actions } from 'react-native-router-flux';
-import { LoginButton, AccessToken, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
 
 // Custom modules
 import { emailValidator } from '../../app/common/validations';
 import { processSignupForm } from '../signup/signup.action';
-import { processForm, processFacebookLogin } from './login.action';
+import { processForm, facebookLogin } from './login.action';
 import { Styles } from '../../app/common/styles';
 
 
@@ -63,58 +62,7 @@ export class Login extends Component {
           <TouchableHighlight style={Styles.button} onPress={this.handleFormSubmit} underlayColor='#99d9f4'>
             <Text style={Styles.buttonText}>Login</Text>
           </TouchableHighlight>
-          <LoginButton
-                  publishPermissions={["publish_actions"]}
-                  onLoginFinished={
-                      (error, result) => {
-                        if (error) {
-                          alert("login has error: " + result.error);
-                        } else if (result.isCancelled) {
-                          alert("login is cancelled.");
-                        } else {
-
-                          AccessToken.getCurrentAccessToken().then(
-                            (data) => {
-                              let accessToken = data.accessToken
-                              const responseInfoCallback = (error, result) => {
-                                if (error) {
-                                  alert('Error fetching data: ' + error.toString());
-                                } else {
-                                    let user = {
-                                      name: result.name,
-                                      email: result.email,
-                                      social: {
-                                        facebook: {
-                                          id: result.id,
-                                          token: accessToken
-                                        }
-                                      }
-                                    }
-                                    this.props.processFacebookLogin(user);
-                                }
-                              }
-                              const infoRequest = new GraphRequest(
-                                '/me',
-                                {
-                                  accessToken: accessToken,
-                                  parameters: {
-                                    fields: {
-                                      string: 'email,name,first_name,middle_name,last_name'
-                                    }
-                                  }
-                                },
-                                responseInfoCallback
-                              );
-
-                              // Start the graph request.
-                              new GraphRequestManager().addRequest(infoRequest).start()
-
-                            }
-                          )
-                        }
-                      }
-                    }
-                    onLogoutFinished={() => alert("logout.")}/>
+            <Button title="Login with facebook" onPress={this.props.facebookLogin} />
           <Text onPress={Actions.signup}>Dont have an account?</Text>
 
 				</View>
@@ -128,7 +76,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     processForm: processForm,
     processSignupForm: processSignupForm,
-    processFacebookLogin: processFacebookLogin
+    facebookLogin: facebookLogin
 	}, dispatch);
 };
 

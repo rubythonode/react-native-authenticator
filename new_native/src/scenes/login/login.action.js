@@ -1,9 +1,7 @@
 import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
 import axios from 'axios';
-import { AsyncStorage } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { alert } from '../../app/common/alert';
 import { AUTH } from '../../app/common/enums';
+import { asyncStorage, authErrorBuilder } from '../../app/common/helper';
 
 
 export function signInAction() {
@@ -51,14 +49,10 @@ export function processForm({email, password}) {
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-				 successLogin(responseData, dispatch);
+				 asyncStorage(responseData, dispatch);
 		})
 		.catch((error) => {
-					error.then((res) =>{
-						const errorMessage = res.errors.email ? res.errors.email : res.errors.password;
-						alert(errorMessage);
-						dispatch(signInErrorAction(errorMessage));
-					})
+				authErrorBuilder(error, dispatch);
 		}).done();
 	};
 };
@@ -75,7 +69,7 @@ export function processFacebookLogin(profileInfo){
 		})
 		.then((response) => response.json())
 		.then((responseData) =>{
-			successLogin(responseData, dispatch);
+			asyncStorage(responseData, dispatch);
 		})
 	}
 }

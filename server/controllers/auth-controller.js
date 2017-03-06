@@ -6,6 +6,7 @@ import { USER_ROLE } from '../helpers/enums';
 
 
 exports.signup = function(req, res, next) {
+  console.log(req.body);
   let validationResult = validateSignupForm(req.body);
 	if(!validationResult.success) {
 		return res.status(400).json({
@@ -15,7 +16,7 @@ exports.signup = function(req, res, next) {
 		});
 	}
 
-  passport.authenticate('local-signup', function(err, token, userData) {
+  passport.authenticate('local-signup', function(err, payload) {
     if(err) {
       if(err.name === 'MongoError' && err.code === 11000) {
         return res.status(409).json({
@@ -31,13 +32,7 @@ exports.signup = function(req, res, next) {
         message: 'Could not process the form'
       });
     }
-    return res.json({
-      success: true,
-      message: 'You have successfully logged in',
-      token,
-      userData
-    })
-
+    return res.json(payload);
 
   })(req, res, next);
 };
@@ -64,7 +59,7 @@ exports.login = function(req, res, next) {
 		});
 	}
 
-  passport.authenticate('local-login', function(err, token, userData) {
+  passport.authenticate('local-login', function(err, payload) {
     if(err) {
       if(err.name === 'IncorrectCredentialsError') {
         return res.status(400).json({
@@ -78,12 +73,7 @@ exports.login = function(req, res, next) {
         message: 'Could not process the form'
       });
     }
-    return res.json({
-      success: true,
-      message: 'You have successfully logged in',
-      token,
-      userData
-    })
+    return res.json(payload)
   })(req, res, next);
 };
 

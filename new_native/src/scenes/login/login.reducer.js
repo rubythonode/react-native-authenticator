@@ -11,9 +11,9 @@ export default function (state = INITIAL_STATE, action) {
 		 case AUTH_USER:
 	      return { ...state, errors: null, authenticated: true };
 	     case SET_ADMIN_PRIVILEGES:
-	      return { ...state, admin_privileges: true }; 
+	      return { ...state, admin_privileges: true };
 	     case AUTH_ERROR:
-	      return { ...state, errors: action.errors }; 
+	      return { ...state, errors: action.errors };
 	}
 	return state;
 };

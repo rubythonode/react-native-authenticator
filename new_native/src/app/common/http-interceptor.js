@@ -26,6 +26,7 @@ export const interceptor = fetchIntercept.register({
       Actions.login();
       return;
     } else {
+      console.log(response);
       return Promise.reject(response.json());
     }
     return response;

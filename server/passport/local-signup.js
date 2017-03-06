@@ -1,7 +1,7 @@
 const User = require('mongoose').model('User');
 const passportLocalStrategy = require('passport-local').Strategy;
-const  jwt = require('jsonwebtoken');
 import { USER_ROLE } from '../helpers/enums';
+const token = require('../helpers/token-generator');
 
 module.exports = function(config) {
 
@@ -22,20 +22,8 @@ module.exports = function(config) {
 		let newUser = new User(userData);
 		newUser.save(function(err, user) {
 			if(err) { return done(err); }
-			let payload = {
-				sub: user._id,
-				timestamp: new Date().getTime(),
-				role: user.role
-			};
-
-			let token = jwt.sign(payload, config.jwtSecret);
-
-			let userData = {
-				name: user.name,
-				role: user.role
-			};
-
-			return done(null, token, userData);
+			const payload = token.generateToken(user);
+			return done(null, payload);
 		});
 	});
 };

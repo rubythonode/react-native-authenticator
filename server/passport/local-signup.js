@@ -1,6 +1,7 @@
 const User = require('mongoose').model('User');
 const passportLocalStrategy = require('passport-local').Strategy;
 const  jwt = require('jsonwebtoken');
+import { USER_ROLE } from '../helpers/enums';
 
 module.exports = function(config) {
 
@@ -15,7 +16,7 @@ module.exports = function(config) {
 			password: password,
 			social: req.body.social ? req.body.social : { facebook: { token: null } },
 			name: req.body.name,
-			role: req.body.role || 'user'
+			role: req.body.role || USER_ROLE.DEFAULT_USER_ROLE
 		};
 
 		let newUser = new User(userData);

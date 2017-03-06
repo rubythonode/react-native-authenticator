@@ -4,17 +4,14 @@ import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { processForm } from './login.action';
-
 import { View, Text, Button, TextInput, AsyncStorage, StyleSheet, ScrollView, TouchableHighlight } from 'react-native';
 import t from 'tcomb-form-native';
 import { Actions } from 'react-native-router-flux';
-
-import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import { LoginButton, AccessToken, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
 
 import { emailValidator } from '../../app/common/validations';
-
 import { processSignupForm } from '../signup/signup.action';
+import { processForm, processFacebookLogin } from './login.action';
 
 const Form = t.form.Form;
 
@@ -67,39 +64,55 @@ export class Login extends Component {
           <LoginButton
                   publishPermissions={["publish_actions"]}
                   onLoginFinished={
-                    (error, result) => {
-                      if (error) {
-                        alert("Login failed with error: " + result.error);
-                      } else if (result.isCancelled) {
-                        alert("Login was cancelled");
-                      } else {
-                        alert("Login was successful with permissions: " + result.grantedPermissions)
-												AccessToken.getCurrentAccessToken()
-																	 .then((data) => {
-																		 const { accessToken } = data;
-																		 fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
-																		  .then((response) => response.json())
-																		  .then((json) => {
-                                        let user = {
-                                          name: json.name,
-                                          email: json.email,
-                                          password: 'password',
-                                          social: {
-                                            facebook: {
-                                              token: accessToken
-                                            }
-                                          }
+                      (error, result) => {
+                        if (error) {
+                          alert("login has error: " + result.error);
+                        } else if (result.isCancelled) {
+                          alert("login is cancelled.");
+                        } else {
+
+                          AccessToken.getCurrentAccessToken().then(
+                            (data) => {
+                              let accessToken = data.accessToken
+                              const responseInfoCallback = (error, result) => {
+                                if (error) {
+                                  alert('Error fetching data: ' + error.toString());
+                                } else {
+                                    let user = {
+                                      name: result.name,
+                                      email: result.email,
+                                      social: {
+                                        facebook: {
+                                          id: result.id,
+                                          token: accessToken
                                         }
-                                        this.props.processSignupForm(user);
-																		  })
-																		  .catch((error) => {
-																		    console.log(error)
-																		  })
-																	 });
+                                      }
+                                    }
+                                    this.props.processFacebookLogin(user);
+                                }
+                              }
+                              const infoRequest = new GraphRequest(
+                                '/me',
+                                {
+                                  accessToken: accessToken,
+                                  parameters: {
+                                    fields: {
+                                      string: 'email,name,first_name,middle_name,last_name'
+                                    }
+                                  }
+                                },
+                                responseInfoCallback
+                              );
+
+                              // Start the graph request.
+                              new GraphRequestManager().addRequest(infoRequest).start()
+
+                            }
+                          )
+                        }
                       }
                     }
-                  }
-                  onLogoutFinished={() => alert("User logged out")}/>
+                    onLogoutFinished={() => alert("logout.")}/>
           <Text onPress={Actions.signup}>Dont have an account?</Text>
 
 				</View>
@@ -112,7 +125,8 @@ export class Login extends Component {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     processForm: processForm,
-    processSignupForm: processSignupForm
+    processSignupForm: processSignupForm,
+    processFacebookLogin: processFacebookLogin
 	}, dispatch);
 };
 

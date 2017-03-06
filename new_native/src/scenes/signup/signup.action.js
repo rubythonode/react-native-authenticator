@@ -2,13 +2,13 @@ import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './signup.types';
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-const api = 'http://localhost:3000/auth/signup';
+import { AUTH } from '../../app/common/enums';
 import { alert } from '../../app/common/alert';
 
 
 export function processSignupForm(obj){
   return function(dispatch){
-    fetch(api, {
+    fetch(AUTH.SIGNUP, {
 			method: 'POST',
 			headers: {
 		    'Accept': 'application/json',

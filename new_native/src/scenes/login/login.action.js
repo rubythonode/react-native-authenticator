@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AsyncStorage } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { alert } from '../../app/common/alert';
+import { AUTH } from '../../app/common/enums';
 
 
 export function signInAction() {
@@ -23,10 +24,21 @@ export function signInErrorAction(errors) {
 		errors
 	};
 };
+const successLogin = (responseData, dispatch) =>{
+	AsyncStorage
+		.setItem('token', responseData.token)
+		.then(() => {
+			dispatch(signInAction());
+			dispatch(setAdminPrevilegeAction());
+		});
 
+	AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
+
+	Actions.home();
+}
 export function processForm({email, password}) {
 	return function(dispatch) {
-		fetch('http://localhost:3000/auth/login', {
+		fetch(AUTH.LOGIN, {
 			method: 'POST',
 			headers: {
 		    'Accept': 'application/json',
@@ -39,16 +51,7 @@ export function processForm({email, password}) {
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-				  	AsyncStorage
-							.setItem('token', responseData.token)
-							.then(() => {
-								dispatch(signInAction());
-								dispatch(setAdminPrevilegeAction());
-							});
-
-						AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
-
-						Actions.home();
+				 successLogin(responseData, dispatch);
 		})
 		.catch((error) => {
 					error.then((res) =>{
@@ -59,3 +62,20 @@ export function processForm({email, password}) {
 		}).done();
 	};
 };
+
+export function processFacebookLogin(profileInfo){
+	return function(dispatch){
+		fetch(AUTH.FACEBOOK, {
+			method: 'POST',
+			headers: {
+		    'Accept': 'application/json',
+		    'Content-Type': 'application/json',
+		  },
+			body: JSON.stringify(profileInfo)
+		})
+		.then((response) => response.json())
+		.then((responseData) =>{
+			successLogin(responseData, dispatch);
+		})
+	}
+}

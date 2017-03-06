@@ -3,20 +3,21 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import { View, Text, Button, TextInput, AsyncStorage, StyleSheet, ScrollView , TouchableHighlight} from 'react-native';
+import { View, Text, Button, TextInput, AsyncStorage, ScrollView , TouchableHighlight} from 'react-native';
+// Third party modules here
 import { Actions } from 'react-native-router-flux';
-
-// Import action creator
-import { processSignupForm } from './signup.action';
-
 import t from 'tcomb-form-native';
+
+// Custom modules
+import { processSignupForm } from './signup.action';
 import { emailValidator, passwordValidator } from '../../app/common/validations';
+import { Styles } from '../../app/common/styles';
 
 let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
   return 'Your email must be valid.';
 };
+
 let Password = t.refinement(t.String, passwordValidator);
 Password.getValidationErrorMessage = function(value, path, context){
   return 'Your password must be at least 8 characters.';
@@ -70,14 +71,14 @@ class Signup extends Component{
   render(){
     return(
       <ScrollView keyboardShouldPersistTaps={'handled'}>
-        <View style={styles.container}>
+        <View style={Styles.container}>
           <Form
           ref="signup"
           type={formModel}
           options={options}
         />
-        <TouchableHighlight style={styles.button} onPress={this.handleSignupFormSubmit} underlayColor='#99d9f4'>
-          <Text style={styles.buttonText}>Signup</Text>
+        <TouchableHighlight style={Styles.button} onPress={this.handleSignupFormSubmit} underlayColor='#99d9f4'>
+          <Text style={Styles.buttonText}>Signup</Text>
         </TouchableHighlight>
             <Text onPress={Actions.login}>
               Go to login
@@ -102,32 +103,3 @@ function mapStateToProps(state) {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
-
-const  styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-  inputStyle:{
-    height: 20,
-    borderColor: 'gray',
-    borderWidth: 1
-  },
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  }
-})

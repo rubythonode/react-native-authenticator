@@ -5,6 +5,8 @@ import { signOutAction } from './home.actions';
 
 import { View, Button, AsyncStorage, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+// Custom modules here
+import { Styles } from '../../app/common/styles';
 
 class SignOut extends React.Component {
 
@@ -22,7 +24,7 @@ class SignOut extends React.Component {
 
   render() {
     return (
-    	<View style={{ marginTop: 70 }}>
+    	<View style={Styles.container}>
     		<Button title="Sign Out"
 				    onPress={this.handleSignOut} />
         <Text onPress={Actions.login}>Go to login</Text>

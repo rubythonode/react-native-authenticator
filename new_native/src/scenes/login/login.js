@@ -9,12 +9,14 @@ import t from 'tcomb-form-native';
 import { Actions } from 'react-native-router-flux';
 import { LoginButton, AccessToken, GraphRequest, GraphRequestManager} from 'react-native-fbsdk';
 
+// Custom modules
 import { emailValidator } from '../../app/common/validations';
 import { processSignupForm } from '../signup/signup.action';
 import { processForm, processFacebookLogin } from './login.action';
+import { Styles } from '../../app/common/styles';
+
 
 const Form = t.form.Form;
-
 let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
   return 'Invalid email address';
@@ -52,14 +54,14 @@ export class Login extends Component {
 	render() {
 		return (
 			<ScrollView keyboardShouldPersistTaps={'handled'}>
-				<View style={styles.container}>
+				<View style={Styles.container}>
             <Form
             ref="form"
             type={formModel}
             options={options}
           />
-          <TouchableHighlight style={styles.button} onPress={this.handleFormSubmit} underlayColor='#99d9f4'>
-            <Text style={styles.buttonText}>Login</Text>
+          <TouchableHighlight style={Styles.button} onPress={this.handleFormSubmit} underlayColor='#99d9f4'>
+            <Text style={Styles.buttonText}>Login</Text>
           </TouchableHighlight>
           <LoginButton
                   publishPermissions={["publish_actions"]}
@@ -136,34 +138,4 @@ function mapStateToProps(state) {
 	};
 };
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: '#ffffff',
-  },
-	inputStyle:{
-		height: 20,
-		borderColor: 'gray',
-		borderWidth: 1
-	},
-  button: {
-    height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  }
-})

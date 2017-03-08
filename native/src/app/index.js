@@ -31,7 +31,7 @@ middlewares.push(reduxThunk);
 const createStoreWithMiddlware = applyMiddleware(...middlewares)(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-export default class wishfill_native extends Component {
+export default class native extends Component {
 
   async componentWillMount() {
     const token = await AsyncStorage.getItem('token');
@@ -70,4 +70,4 @@ export default class wishfill_native extends Component {
   }
 };
 
-AppRegistry.registerComponent('wishfill_native', () => wishfill_native);
+AppRegistry.registerComponent('native', () => native);

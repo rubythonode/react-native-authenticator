@@ -15,7 +15,7 @@ module.exports = function(app) {
 
 	authRoutes.post('/signup', authController.signup);
 	authRoutes.post('/login', authController.login);
-	
+
 	//adminRoutes.get('/dashboard', _outController.dashboard);
 
 	app.use('/api', authCheckMiddleware, adminAccessMiddleware);
@@ -26,9 +26,10 @@ module.exports = function(app) {
 
 	app.use('/auth', authRoutes);
 
+  app.post('/auth/facebook', authController.facebook);
 	app.get('/auth/facebook', passport.authenticate('facebook'));
-	app.get('/auth/facebook/callback', 
-			authController.facebookLogin, 
+	app.get('/auth/facebook/callback',
+			authController.facebookLogin,
 			authController.facebookRedirect);
 
 };

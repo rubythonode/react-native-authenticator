@@ -1,5 +1,9 @@
 const validator = require('validator'),
-      passport = require('passport');
+      passport = require('passport'),
+      User = require('../models/user');
+import { USER_ROLE } from '../helpers/enums';
+import { authResponseGenerator } from '../helpers/response-generator';
+
 
 exports.signup = function(req, res, next) {
   let validationResult = validateSignupForm(req.body);
@@ -11,7 +15,7 @@ exports.signup = function(req, res, next) {
 		});
 	}
 
-  passport.authenticate('local-signup', function(err, token, userData) {
+  passport.authenticate('local-signup', function(err, payload) {
     if(err) {
       if(err.name === 'MongoError' && err.code === 11000) {
         return res.status(409).json({
@@ -27,13 +31,7 @@ exports.signup = function(req, res, next) {
         message: 'Could not process the form'
       });
     }
-    return res.json({
-      success: true,
-      message: 'You have successfully logged in',
-      token,
-      userData
-    })
-
+    return res.json(payload);
 
   })(req, res, next);
 };
@@ -60,7 +58,7 @@ exports.login = function(req, res, next) {
 		});
 	}
 
-  passport.authenticate('local-login', function(err, token, userData) {
+  passport.authenticate('local-login', function(err, payload) {
     if(err) {
       if(err.name === 'IncorrectCredentialsError') {
         return res.status(400).json({
@@ -74,14 +72,27 @@ exports.login = function(req, res, next) {
         message: 'Could not process the form'
       });
     }
-    return res.json({
-      success: true,
-      message: 'You have successfully logged in',
-      token,
-      userData
-    })
+    return res.json(payload)
   })(req, res, next);
 };
+
+exports.facebook = function(req, res){
+  User.findOne({email: req.body.email})
+    .exec(function(err, response){
+      if (response){
+        return res.json(authResponseGenerator(req.body))
+      }
+      else{
+        req.body.role = req.body.role || USER_ROLE.DEFAULT_USER_ROLE;
+        var newUser = new User(req.body);
+        newUser.save(function(err, user){
+          if (!err){
+            return res.json(authResponseGenerator(user))
+          }
+        })
+      }
+    })
+}
 
 /**
  * Validate the sign up form
@@ -93,14 +104,16 @@ function validateSignupForm(payload) {
   let isFormValid = true;
   let errors = {};
   let message = '';
-  if (!payload.email || payload.password.trim().length === 0) {
+  if (!payload.email || payload.email.trim().length === 0) {
     isFormValid = false;
     errors.email = "Please provide a correct email address.";
   }
 
-  if (!payload.password || !validator.isLength(payload.password, 8)) {
-    isFormValid = false;
-    errors.password = "Password must have at least 8 characters.";
+  if(!payload.social) {
+    if (!payload.password || !validator.isLength(payload.password, 8)) {
+      isFormValid = false;
+      errors.password = "Password must have at least 8 characters.";
+    }
   }
 
   if (!payload.name || payload.name.length === 0) {

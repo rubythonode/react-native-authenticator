@@ -1,52 +1,32 @@
-import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './signup.types';
-import axios from 'axios';
-import { AsyncStorage } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-const api = 'http://localhost:3000/auth/signup';
-import { alert } from '../../app/common/alert';
+import { AUTH } from '../../app/common/enums';
+import { asyncStorage, authErrorBuilder, processFormCallback } from '../../app/common/helper';
+import { asyncActionNames, buildAsyncActions} from '../services/actionCreator';
+
+// Build action names for login
+const actionNames = asyncActionNames('LOGIN');
+const actionCreators = buildAsyncActions(actionNames);
 
 
-export function processSignupForm(name, email, password){
+export function processSignupForm(obj){
   return function(dispatch){
-    fetch(api, {
+    dispatch(actionCreators.progress());
+    fetch(AUTH.SIGNUP, {
 			method: 'POST',
 			headers: {
 		    'Accept': 'application/json',
 		    'Content-Type': 'application/json',
 		  },
-			body:JSON.stringify({
-        name: name,
-		    email: email,
-		    password: password
-		  })
+			body: JSON.stringify(obj)
 		})
     .then((response) => response.json())
 		.then((responseData) =>{
-      AsyncStorage
-        .setItem('token', responseData.token)
-        .then(() => {
-          dispatch({type: AUTH_USER});
-          dispatch({type: SET_ADMIN_PRIVILEGES});
-        });
-
-      AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
-      Actions.home();
-
+      processFormCallback(responseData, dispatch);
     })
-    .catch((error) =>{
-      error.then((res) => {
-        var errorMessage;
-        if (res.errors.password){
-          errorMessage = res.errors.password;
-        }
-        if (res.errors.name){
-          errorMessage = res.errors.name;
-        }
-        if (res.errors.email){
-          errorMessage = res.error.email;
-        }
-        alert(errorMessage);
-      })
+    .catch((error) => {
+      authErrorBuilder(error)
+        .then((res) =>{
+          dispatch(actionCreators.failure(res));
+        });
     })
   }
 }

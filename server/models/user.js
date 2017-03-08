@@ -3,9 +3,15 @@ const bcrypt = require('bcrypt');
 
 let UserSchema = new mongoose.Schema({
 	email: { type: String, index: { unique: true }},
-	password: String,
+	password: { type: String, optional: true},
 	name: String,
-	role: String
+	role: String,
+	social: {
+		facebook: {
+			id: String,
+			token: String
+		}
+	}
 });
 
 UserSchema.methods.comparePassword = function(password, callback) {

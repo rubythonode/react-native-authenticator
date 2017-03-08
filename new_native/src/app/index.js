@@ -11,21 +11,24 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 import jwt_decode from 'jwt-decode';
-import interceptor from  './common/http-interceptor';
-/*
-import { AUTH_USER } from './actions/types';
-import { SET_ADMIN_PRIVILEGES } from './actions/types';
 
-import routes from './routes';
-*/
 import { Scene, Router, Actions } from 'react-native-router-flux';
+import createLoggerMiddleware from 'redux-logger';
 
 import reducers from './redux/rootReducer';
 import Login from '../scenes/login/login';
 import Home from '../scenes/home/home';
 import Signup from '../scenes/signup/signup';
+import './common/http-interceptor';
+import { processFormCallback } from  './common/helper';
 
-const createStoreWithMiddlware = applyMiddleware(reduxThunk)(createStore);
+let middlewares = [];
+if (__DEV__ === true) {
+  middlewares.push(createLoggerMiddleware({}));
+}
+middlewares.push(reduxThunk);
+
+const createStoreWithMiddlware = applyMiddleware(...middlewares)(createStore);
 const store = createStoreWithMiddlware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 export default class wishfill_native extends Component {
@@ -33,6 +36,12 @@ export default class wishfill_native extends Component {
   async componentWillMount() {
     const token = await AsyncStorage.getItem('token');
     if(token) {
+      const storedUser = await AsyncStorage.getItem('user');
+      const payload = JSON.parse(storedUser);
+      store.dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload
+      })
       Actions.home();
     }
   }
@@ -60,25 +69,5 @@ export default class wishfill_native extends Component {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 70,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('wishfill_native', () => wishfill_native);

@@ -1,32 +1,17 @@
-import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './login.types';
-import axios from 'axios';
-import { AsyncStorage } from 'react-native';
+import { AUTH } from '../../app/common/enums';
+import { asyncStorage, authErrorBuilder, loginWithFacebook, processFormCallback} from '../../app/common/helper';
+import { asyncActionNames, buildAsyncActions} from '../services/actionCreator';
 import { Actions } from 'react-native-router-flux';
-import { alert } from '../../app/common/alert';
 
 
-export function signInAction() {
-	return {
-		type: AUTH_USER
-	};
-};
-
-export function setAdminPrevilegeAction() {
-	return {
-		type: SET_ADMIN_PRIVILEGES
-	};
-};
-
-export function signInErrorAction(errors) {
-	return {
-		type: AUTH_ERROR,
-		errors
-	};
-};
+// Build action names for login
+const actionNames = asyncActionNames('LOGIN');
+const actionCreators = buildAsyncActions(actionNames);
 
 export function processForm({email, password}) {
 	return function(dispatch) {
-		fetch('http://localhost:3000/auth/login', {
+		dispatch(actionCreators.progress())
+		fetch(AUTH.LOGIN, {
 			method: 'POST',
 			headers: {
 		    'Accept': 'application/json',
@@ -39,23 +24,44 @@ export function processForm({email, password}) {
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-				  	AsyncStorage
-							.setItem('token', responseData.token)
-							.then(() => {
-								dispatch(signInAction());
-								dispatch(setAdminPrevilegeAction());
-							});
-
-						AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
-
-						Actions.home();
+				processFormCallback(responseData, dispatch);
 		})
 		.catch((error) => {
-					error.then((res) =>{
-						const errorMessage = res.errors.email ? res.errors.email : res.errors.password;
-						alert(errorMessage);
-						dispatch(signInErrorAction(errorMessage));
+				authErrorBuilder(error)
+					.then((res) =>{
+						dispatch(actionCreators.failure(res));
 					})
 		}).done();
 	};
 };
+
+export  function facebookLogin(){
+	return function(dispatch){
+		dispatch(actionCreators.progress());
+		loginWithFacebook()
+			.then((result) =>{
+				let user = {
+          name: result.user.name,
+          email: result.user.email,
+          social: {
+            facebook: {
+              id: result.user.id,
+              token: result.accessToken
+            }
+          }
+        }
+				fetch(AUTH.FACEBOOK, {
+					method: 'POST',
+					headers: {
+				    'Accept': 'application/json',
+				    'Content-Type': 'application/json',
+				  },
+					body: JSON.stringify(user)
+				})
+				.then((response) => response.json())
+				.then((responseData) =>{
+					processFormCallback(responseData, dispatch);
+				})
+			})
+	}
+}

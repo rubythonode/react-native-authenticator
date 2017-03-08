@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt'),
-	  jwt = require('jsonwebtoken'),
 	  User = require('mongoose').model('User'),
 	  passportLocalStrategy = require('passport-local').Strategy;
+import { authResponseGenerator } from '../helpers/response-generator';
 
 module.exports = function(config) {
 
@@ -18,7 +18,6 @@ module.exports = function(config) {
 
 		User.findOne({email: userData.email}, function(err, user) {
 			if(err) { return done(err); }
-
 			if(!user) {
 				let error = new Error('User doesn\'t exist');
 				error.name = 'IncorrectCredentialsError';
@@ -34,20 +33,9 @@ module.exports = function(config) {
 					return done(error);
 				}
 
-				let payload = {
-					sub: user._id,
-					timestamp: new Date().getTime(),
-					role: user.role
-				};
+				var payload = authResponseGenerator(user);
 
-				let token = jwt.sign(payload, config.jwtSecret);
-
-				let userData = {
-					name: user.name,
-					role: user.role
-				};
-
-				return done(null, token, userData);
+				return done(null, payload);
 			});
 		});
 	});

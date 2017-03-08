@@ -1,48 +1,16 @@
-import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR, HTTP_PROGRESS} from './login.types';
-import axios from 'axios';
 import { AUTH } from '../../app/common/enums';
-import { asyncStorage, authErrorBuilder, loginWithFacebook} from '../../app/common/helper';
+import { asyncStorage, authErrorBuilder, loginWithFacebook, processFormCallback} from '../../app/common/helper';
+import { asyncActionNames, buildAsyncActions} from '../services/actionCreator';
+import { Actions } from 'react-native-router-flux';
 
 
-export function signInAction(payload) {
-	return {
-		type: AUTH_USER,
-		payload
-	};
-};
+// Build action names for login
+const actionNames = asyncActionNames('LOGIN');
+const actionCreators = buildAsyncActions(actionNames);
 
-export function httpProgress(){
-	return {
-		type: HTTP_PROGRESS
-	}
-}
-
-export function setAdminPrevilegeAction() {
-	return {
-		type: SET_ADMIN_PRIVILEGES
-	};
-};
-
-export function signInErrorAction(errors) {
-	return {
-		type: AUTH_ERROR,
-		errors
-	};
-};
-const successLogin = (responseData, dispatch) =>{
-	AsyncStorage
-		.setItem('token', responseData.token)
-		.then(() => {
-			dispatch(signInAction());
-			dispatch(setAdminPrevilegeAction());
-		});
-
-	AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
-
-	Actions.home();
-}
 export function processForm({email, password}) {
 	return function(dispatch) {
+		dispatch(actionCreators.progress())
 		fetch(AUTH.LOGIN, {
 			method: 'POST',
 			headers: {
@@ -56,34 +24,20 @@ export function processForm({email, password}) {
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-				 asyncStorage(responseData, dispatch);
+				processFormCallback(responseData, dispatch);
 		})
 		.catch((error) => {
-				authErrorBuilder(error, dispatch);
+				authErrorBuilder(error)
+					.then((res) =>{
+						dispatch(actionCreators.failure(res));
+					})
 		}).done();
 	};
 };
 
-// export function processFacebookLogin(profileInfo){
-// 	return function(dispatch){
-// 		fetch(AUTH.FACEBOOK, {
-// 			method: 'POST',
-// 			headers: {
-// 		    'Accept': 'application/json',
-// 		    'Content-Type': 'application/json',
-// 		  },
-// 			body: JSON.stringify(profileInfo)
-// 		})
-// 		.then((response) => response.json())
-// 		.then((responseData) =>{
-// 			asyncStorage(responseData, dispatch);
-// 		})
-// 	}
-// }
-
 export  function facebookLogin(){
 	return function(dispatch){
-		dispatch({type: HTTP_PROGRESS})
+		dispatch(actionCreators.progress());
 		loginWithFacebook()
 			.then((result) =>{
 				let user = {
@@ -106,7 +60,7 @@ export  function facebookLogin(){
 				})
 				.then((response) => response.json())
 				.then((responseData) =>{
-					asyncStorage(responseData, dispatch);
+					processFormCallback(responseData, dispatch);
 				})
 			})
 	}

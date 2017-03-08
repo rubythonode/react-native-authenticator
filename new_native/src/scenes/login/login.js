@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-
-import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -12,7 +10,7 @@ import { Actions } from 'react-native-router-flux';
 // Custom modules
 import { emailValidator } from '../../app/common/validations';
 import { processSignupForm } from '../signup/signup.action';
-import { processForm, facebookLogin, httpProgress } from './login.action';
+import { processForm, facebookLogin } from './login.action';
 import { ProgressIndicator } from '../common-scenes/progress';
 
 // Stylesheet
@@ -49,7 +47,6 @@ export class Login extends Component {
 	handleFormSubmit() {
     let value = this.refs.form.getValue();
     if (value) { // if validation fails, value will be null
-      this.props.httpProgress();
       this.props.processForm(value);
     }
 	};
@@ -85,8 +82,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     processForm: processForm,
     processSignupForm: processSignupForm,
-    facebookLogin: facebookLogin,
-    httpProgress: httpProgress
+    facebookLogin: facebookLogin
 	}, dispatch);
 };
 

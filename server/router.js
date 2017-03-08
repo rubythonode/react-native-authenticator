@@ -15,6 +15,9 @@ module.exports = function(app) {
 
 	authRoutes.post('/signup', authController.signup);
 	authRoutes.post('/login', authController.login);
+	authRoutes.post('/protected', passport.authenticate('jwt', { session: false }), function(req, res){
+		console.log(req.user);
+	})
 
 	//adminRoutes.get('/dashboard', _outController.dashboard);
 

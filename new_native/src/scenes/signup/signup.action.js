@@ -1,11 +1,15 @@
-import { AUTH_USER, SET_ADMIN_PRIVILEGES, AUTH_ERROR} from './signup.types';
-import axios from 'axios';
 import { AUTH } from '../../app/common/enums';
-import { asyncStorage, authErrorBuilder } from '../../app/common/helper';
+import { asyncStorage, authErrorBuilder, processFormCallback } from '../../app/common/helper';
+import { asyncActionNames, buildAsyncActions} from '../services/actionCreator';
+
+// Build action names for login
+const actionNames = asyncActionNames('LOGIN');
+const actionCreators = buildAsyncActions(actionNames);
 
 
 export function processSignupForm(obj){
   return function(dispatch){
+    dispatch(actionCreators.progress());
     fetch(AUTH.SIGNUP, {
 			method: 'POST',
 			headers: {
@@ -16,10 +20,13 @@ export function processSignupForm(obj){
 		})
     .then((response) => response.json())
 		.then((responseData) =>{
-      asyncStorage(responseData, dispatch);
+      processFormCallback(responseData, dispatch);
     })
     .catch((error) => {
-      authErrorBuilder(error, dispatch);
+      authErrorBuilder(error)
+        .then((res) =>{
+          dispatch(actionCreators.failure(res));
+        });
     })
   }
 }

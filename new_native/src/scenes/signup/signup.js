@@ -10,6 +10,8 @@ import t from 'tcomb-form-native';
 import { processSignupForm } from './signup.action';
 import { emailValidator, passwordValidator } from '../../app/common/validations';
 import { Styles } from '../../app/common/styles';
+import { ProgressIndicator } from '../common-scenes/progress';
+
 
 let Email = t.refinement(t.String, emailValidator);
 Email.getValidationErrorMessage = function (value, path, context) {
@@ -82,6 +84,11 @@ class Signup extends Component{
               Go to login
             </Text>
         </View>
+        <View style={Styles.progress} >
+        {
+          this.props.progress ? (<ProgressIndicator style={{justifyContent: 'center',alignItems: 'center'}} />):(<Text></Text>)
+        }
+        </View>
       </ScrollView>
     )
   }
@@ -96,7 +103,8 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
 	return {
-		errors: state.login.errors
+		errors: state.login.errors,
+    progress: state.login.progress
 	};
 };
 

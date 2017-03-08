@@ -20,6 +20,7 @@ class SignOut extends React.Component {
   	AsyncStorage.removeItem('token');
   	AsyncStorage.removeItem('user');
     this.props.signOut();
+    console.log(this.props.profile);
     if (this.props.profile.social.facebook.id){
       handleFacebookLogout();
     }

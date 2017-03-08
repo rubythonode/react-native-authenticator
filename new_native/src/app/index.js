@@ -19,6 +19,8 @@ import reducers from './redux/rootReducer';
 import Login from '../scenes/login/login';
 import Home from '../scenes/home/home';
 import Signup from '../scenes/signup/signup';
+import './common/http-interceptor';
+import { processFormCallback } from  './common/helper';
 
 let middlewares = [];
 if (__DEV__ === true) {
@@ -34,6 +36,12 @@ export default class wishfill_native extends Component {
   async componentWillMount() {
     const token = await AsyncStorage.getItem('token');
     if(token) {
+      const storedUser = await AsyncStorage.getItem('user');
+      const payload = JSON.parse(storedUser);
+      store.dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload
+      })
       Actions.home();
     }
   }
@@ -61,4 +69,5 @@ export default class wishfill_native extends Component {
     );
   }
 };
+
 AppRegistry.registerComponent('wishfill_native', () => wishfill_native);

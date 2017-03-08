@@ -6,21 +6,6 @@ import { LoginManager, GraphRequest, GraphRequestManager, AccessToken} from 'rea
 import { asyncActionNames, buildAsyncActions} from '../../scenes/services/actionCreator';
 
 
-
-// export function asyncStorage(responseData, dispatch){
-//   AsyncStorage
-// 		.setItem('token', responseData.token)
-// 		.then(() => {
-// 			dispatch(signInAction(responseData.userData));
-// 			dispatch(setAdminPrevilegeAction());
-// 		});
-//
-// 	AsyncStorage.setItem('user', JSON.stringify(responseData.userData));
-//
-// 	Actions.home();
-//
-// }
-
 export async function asyncStorage(key, data){
   if (typeof data === 'object'){
     data = JSON.stringify(data);

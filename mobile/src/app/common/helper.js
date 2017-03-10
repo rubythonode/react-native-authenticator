@@ -46,6 +46,9 @@ const getFacebookAccessToken = () =>{
     .then((data) => {
       resolve(data.accessToken);
     })
+    .catch((error) =>{
+      reject()
+    })
   })
 
 }
@@ -76,6 +79,9 @@ const facebookResponseHandler = (accessToken) =>{
 }
 export async function loginWithFacebook(){
   const data = await LoginManager.logInWithPublishPermissions();
+  if (data.isCancelled){
+    return data;
+  }
   let accessToken = await getFacebookAccessToken();
   const fbResponse = await facebookResponseHandler(accessToken);
   return {user: fbResponse, accessToken};
@@ -95,4 +101,8 @@ export async function processFormCallback(responseData, dispatch){
     Actions.home();
   })
  return result;
+}
+
+export const move = (array, fromIndex, toIndex) => {
+    return array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
 }

@@ -19,6 +19,8 @@ import reducers from './redux/rootReducer';
 import Login from '../scenes/login/login';
 import Home from '../scenes/home/home';
 import Signup from '../scenes/signup/signup';
+import FormConfig from '../scenes/form-config/form-config';
+
 import './common/http-interceptor';
 import { processFormCallback } from  './common/helper';
 
@@ -50,9 +52,12 @@ export default class mobile extends Component {
     return (
       <Provider store={ store }>
         <Router>
+          <Scene key="formConfig"
+                 title="Form Configuration"
+                 initial
+                 component={ FormConfig } />
           <Scene key="login"
                  title="Login"
-                 initial
                  type="reset"
                  component={ Login } />
           <Scene key="home"

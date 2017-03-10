@@ -13,7 +13,7 @@ export default function (state = INITIAL_STATE, action) {
       case actionNames.unauth:
         return { ...state, errors: null, authenticated: false, profile: null, progress: false}
       case actionNames.progress:
-        return { ...state, progress: true}
+        return Object.assign({}, state, {progress: !state.progress})
       case actionNames.privileges:
         return { ...state, admin_privileges: true };
 	}

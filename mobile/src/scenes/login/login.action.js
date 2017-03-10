@@ -40,6 +40,11 @@ export  function facebookLogin(){
 		dispatch(actionCreators.progress());
 		loginWithFacebook()
 			.then((result) =>{
+				if (result.isCancelled){
+					console.log('here we are...');
+					dispatch(actionCreators.progress());
+					return;
+				}
 				let user = {
           name: result.user.name,
           email: result.user.email,
